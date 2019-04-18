@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>单例模式</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
+    <!-- <script src="main.js"></script> -->
+  </head>
+  <body>
+    <div>
+      <button id="loginBtn">登 录</button>
+    </div>
+  </body>
+</html>
+<script>
+    var createLoginLayer = (function() {
+      var div;
+      return function() {
+        if (!div) {
+          div = document.createElement("div");
+          div.innerHTML = "我是登录浮窗";
+          div.style.display = "none";
+          document.body.appendChild(div);
+        }
+        return div;
+      };
+    })()
+    document.getElementById("loginBtn").onclick = function() {
+      var loginLayer = createLoginLayer();
+      loginLayer.style.display = "block";
+    };
+    // ----------js 中的单例模式------------
+    /*  var MyApp = {}
+      MyApp.namespace = function (name) {
+          var parts = name.split('.')
+          var current = MyApp
+          for (var i in parts) {
+             if (!current[parts[i]]) {
+                 current[parts[i]] = {}
+             }
+             current = current[parts[i]]
+          }
+      }
+      MyApp.namespace('event')
+      MyApp.namespace('dom.style')
+      console.log(MyApp) */
+    // ------------- 3、   单例模式使用代理----------
+    /*  var CreateDiv = function(html) {
+      this.html = html;
+      this.init();
+    };
+    CreateDiv.prototype.init = function() {
+      var div = document.createElement("div");
+      div.innerHTML = this.html;
+      document.body.appendChild(div);
+    };
+    //引入代理类
+    var ProxySingletonCreateDiv = (function() {
+      var instance;
+      return function(html) {
+        if (!instance) {
+          instance = new CreateDiv(html);
+        }
+        return instance;
+      };
+    })();
+
+    var a = new ProxySingletonCreateDiv("seven1");
+    var b = new ProxySingletonCreateDiv("seven2");
+    alert(a === b); */
+
+    // -----2、-----透明的单例模式------------------
+
+    /* var CreateDiv = (function () {
+      var instance
+
+      var CreateDiv = function (html) {
+          if (instance) {
+              return instance
+          }
+          this.html = html
+          this.init()
+          console.log(this,'我是this')
+          return instance = this
+      }
+
+      CreateDiv.prototype.init = function () {
+          var div = document.createElement('div')
+          div.innerHTML = this.html
+          document.body.appendChild(div)
+      }
+      return CreateDiv
+  })()
+
+  var a = new CreateDiv('seven1')
+  var b = new CreateDiv('seven2')
+  alert(a===b) */
+
+    // --------------简单的单例模式------------------
+    /* var Singleton = function (name) {
+      this.name = name
+      this.instance = null
+  }
+
+  Singleton.prototype.getNamge = function () {
+      // alert(this.name)
+  }
+
+  Singleton.getInstance = function (name) {
+      if (!this.instance) {
+          this.instance = new Singleton(name)
+      }
+      return this.instance
+  }
+  var a = Singleton.getInstance('sven1')
+  var b = Singleton.getInstance('sven2')
+
+  console.log(a,'我是a')
+  console.log(b,'我是b')
+  alert(a===b) */
+
+    /* var Singleton = function (name) {
+      this.name = name
+  }
+
+  Singleton.prototype.getName = function () {
+      alert(this.name)
+  }
+
+  Singleton.getInstance = (function () {
+      var instance = null
+      return function (name) {
+          if (!instance) {
+             instance = new Singleton(name)
+          }
+          return instance
+      }
+  })()
+  var a = Singleton.getInstance('sven1')
+  var b = Singleton.getInstance('sven2')
+  alert(a===b)  */
+</script>

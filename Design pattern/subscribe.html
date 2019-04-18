@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>订阅-发布模式</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
+    <!-- <script src="main.js"></script> -->
+  </head>
+  <body></body>
+</html>
+<script>
+  // -------------- 4、取消订阅 --------------------------
+  event.remove = function(key, fn) {
+    var fns = this.clientList(key);
+
+    if (!fns) {
+      // 如果key对应的消息没有被人订阅，则直接返回
+      return false;
+    }
+    if (!fns) {
+      // 如果没有传入具体的回调函数，表示需要取消key对应消息的所有订阅
+      fns && (fns.length = 0);
+    } else {
+      for (let l = fns.length - 1; l >= 0; l--) {
+        //反向遍历订阅的回调函数列表
+        const _fn = fns[l];
+        if (_fn === fn) {
+          fns.splice(l, 1);
+        }
+      }
+    }
+  };
+
+  salesOffuce.listen(
+    "squareMeter88",
+    (fn1 = function(price) {
+      // 小明订阅消息
+      console.log("价格=" + price);
+    })
+  );
+
+  salesOffuce.listen(
+    "squareMeter88",
+    (fn2 = function(price) {
+      console.log("价格=" + price);
+    })
+  );
+
+  salesOffuce.remove("squareMeter88", fn1); // 删除小明的订阅
+
+  // -------------- 3、自定义事件 - 对象 --------------------------
+  var event = {
+    clientList: [],
+    listen: function(key, fn) {
+      if (!this.clientList[key]) {
+        this.clientList[key] = [];
+      }
+      //订阅的消息添加进消息缓存列表
+      this.clientList[key].push(fn);
+    },
+    trigger: function() {
+      var key = Array.prototype.shift.call(arguments); // 取出消息类型
+      fns = this.clientList[key]; // 取出该消息对应的回调函数集合
+
+      // 如果没有订阅消息，则返回
+      if (!fns || fns.length === 0) {
+        return false;
+      }
+
+      for (let i = 0, fn; fn < fns[i++]; ) {
+        fn.apply(this, arguments);
+      }
+    }
+  };
+
+  // 给所有对象动态安装发布-订阅功能
+  var installEvent = function(obj) {
+    for (let i in event) {
+      obj[i] = event[i];
+    }
+  };
+
+  var salesOffuce = {};
+
+  // ---------- 2、自定义事件 - 精准 ----------------
+  /*  var salesOffice = {};
+  salesOffice.clientList = {};
+
+  salesOffice.listen = function(key, fn) {
+    //   如果还没有订阅过此类消息，给该类消息创建一个缓存列表
+    if (!this.clientList[key]) {
+      this.clientList[key] = [];
+    }
+    //订阅的消息添加进消息缓存列表
+    this.clientList[key].push(fn);
+  };
+
+  salesOffice.trigger = function() {
+    var key = Array.prototype.shift.call(arguments); // 取出消息类型
+    fns = this.clientList[key]; // 取出该消息对应的回调函数集合
+
+    // 如果没有订阅消息，则返回
+    if (!fns || fns.length === 0) {
+      return false;
+    }
+
+    for (let i = 0, fn; fn < fns[i++]; ) {
+      fn.apply(this, arguments);
+    }
+  };
+
+  salesOffice.listen("squareMeter88", function(price) {
+    console.log("价格=" + price);
+  });
+
+  salesOffice.listen("squareMeter110", function(price) {
+    console.log("价格=" + price);
+  });
+
+  salesOffice.trigger("squareMeter88", 200000);
+  salesOffice.trigger("squareMeter110", 300000); */
+
+  // ---------- 1、自定义事件 ----------------------
+  /*  var salesOffice = {}; //售楼处
+  salesOffice.clientList = []; // 存放订阅者的回调函数
+
+  //  增加订阅者
+  salesOffice.listen = function(fn) {
+    this.clientList.push(fn); //订阅的消息添加到列表
+  };
+
+  // 发布消息
+  salesOffice.trigger = function() {
+    for (let i = 0, fn; fn < this.clientList[i++]; ) {
+      fn.apply(this, arguments); // arguments 是发布消息时带的参数
+    }
+  };
+
+  //  小明订阅消息
+  salesOffice.listen(function(price, squareMeter) {
+    console.log("价格=" + price);
+    console.log("squareMeter=" + squareMeter);
+  });
+
+//  小红订阅发布
+ salesOffice.listen(function(price, squareMeter) {
+    console.log("价格=" + price);
+    console.log("squareMeter=" + squareMeter);
+  });
+
+  salesOffice.trigger(200000, 88);
+  salesOffice.trigger(300000, 110); */
+</script>

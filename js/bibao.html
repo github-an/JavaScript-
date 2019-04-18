@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>闭包</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <div>4</div>
+    <div>5</div>
+  </body>
+</html>
+<script>
+// 封装的写法，变量尽量是在闭包中
+var extent = function () {
+    var value = 0
+    return {
+        call : function () {
+            value++
+            // console.log(value)
+            
+        }
+    }
+}
+var extent = extent()
+
+extent.call()
+extent.call()
+extent.call()
+
+//  封装的写法，变量尽量是在闭包中, 对象写法
+var extent = {
+        value:5,
+        call:function () {
+            this.value ++
+            console.log(this.value)
+        }
+    }
+    extent.call()
+    extent.call()
+    extent.call()
+
+
+//  闭包中 let 是块级作用域，尽在自己的块里干好活儿，出块就找不到了；及时调用函数，也相当于把变量先存了起来
+  var box = document.getElementsByTagName("div");
+
+  for (let index = 0; index < box.length; index++) {
+    // const element = box[index];
+    // box[index].onclick=function () {
+    //     alert(index)
+    // }
+    (function(index) {
+      box[index].onclick = function() {
+        // alert(index);
+      };
+    })(index);
+  }
+
+//   闭包 变量存起来
+  // var func = function(){
+  //     var a= 1
+  //     alert(a)
+  // }
+  // func()
+
+  //     var  func1 = function () {
+  //         var b = 2
+  //         return function () {
+  //             b++
+  //             alert(b)
+  //         }
+  //     }
+  //    var f = func1()
+  //    f()
+  //    f()
+  //    f()
+  //    f()
+  //    f()
+</script>
+<style>
+  div {
+    width: 100px;
+    height: 100px;
+    background: skyblue;
+    float: left;
+    margin-right: 10px;
+  }
+</style>
