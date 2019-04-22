@@ -10,14 +10,120 @@
   </head>
   <body>
     <div
-      style="margin:auto;  text-align:center;width:300px;height: 100px;background: green;"
+      style="margin:auto;  text-align:center;width:600px;height: 300px;background: skyblue;"
     >
       <p>我是中介者模式哦</p>
+
+      <!-- 颜色 -->
+      选择颜色:
+      <select id="colorSelect">
+        <option value="">请选择</option>
+        <option value="red">红色</option>
+        <option value="blue">蓝色</option>
+      </select>
+
+      <!-- 内存 -->
+      选择内存:
+      <select id="memorySelect">
+        <option value="">请选择</option>
+        <option value="32G">32G</option>
+        <option value="16G">16G</option>
+      </select>
+
+      <!-- 购买数量 -->
+      输入购买数量: <input type="text" id="numberInput" /><br />
+
+      <!-- 选择的颜色 -->
+      您选择了颜色:
+      <div id="colorInfo"></div>
+      <br />
+      您选择了内存:
+      <div id="memoryInfo"></div>
+      <br />
+      您输入了数量:
+      <div id="numberInfo"></div>
+      <br />
+
+      <button id="nextBtn" disabled="true">请选择手机颜色和购买数量</button>
     </div>
   </body>
 </html>
 <script>
-  // playerDirector 作为中介者
+  // 中介者模式- 购买商品
+
+  var goods = {
+    // 手机库存
+    "red|32G": 3,
+    "red|16G": 0,
+    "blue|32G": 1,
+    "blue|16G": 6
+  };
+
+  var mediator = (function() {
+    var colorSelect = document.getElementById("colorSelect"),
+      numberInput = document.getElementById("numberInput"),
+      memorySelect = document.getElementById("memorySelect"),
+      colorInfo = document.getElementById("colorInfo"),
+      numberInfo = document.getElementById("numberInfo"),
+      memoryInfo = document.getElementById("memoryInfo"),
+      nextBtn = document.getElementById("nextBtn");
+
+    return {
+      changed: function(obj) {
+        var color = colorSelect.value, // 颜色
+          memory = memorySelect.value, // 内存
+          number = numberInput.value, // 数量
+          stock = goods[color + "|" + memory]; // 颜色和内存对应的手机库存数量
+
+        if (obj === colorSelect) {
+          // 如果改变颜色下拉框
+          colorInfo.innerHTML = color;
+        } else if (obj === memorySelect) {
+          memoryInfo.innerHTML = memory;
+        } else if (obj === numberInput) {
+          numberInfo.innerHTML = number;
+        }
+
+        if (!color) {
+          nextBtn.disabled = true;
+          nextBtn.innerHTML = "请选择手机颜色";
+          return;
+        }
+
+        if (!memory) {
+          nextBtn.disabled = true;
+          nextBtn.innerHTML = "请选择内存";
+          return;
+        }
+
+        // 输入的购买数量是否为正整数
+        if (((number - 0) | 0) !== number - 0) {
+          nextBtn.disabled = true;
+          nextBtn.innerHTML = "请输入正确的购买数量";
+          return;
+        }
+        nextBtn.disabled = false;
+        nextBtn.innerHTML = '放入库存';
+      }
+    };
+  })();
+
+//  事件函数
+colorSelect.onchange= function () {
+   mediator.changed(this);
+};
+
+memorySelect.onchange=function(){
+    mediator.changed(this);
+}
+
+numberInput.onchange=function(){
+    mediator.changed(this);
+}
+ 
+  
+  // -----------------------------------------------------------------
+  /*  // playerDirector 作为中介者
 
   function Player(name, teamColor) {
     this.name = name; // 角色名字
@@ -78,7 +184,7 @@
       player.teamColor = newTeamColor; // 改变队伍颜色
       operations.addPlayer(player); // 增加到新队伍中
     };
-    
+
     // *******  玩家死亡 **********
     operations.playerDead = function(player) {
       var teamColor = player.teamColor,
@@ -109,7 +215,7 @@
         }
       }
     };
-    
+
     // 发送消息
     var reciveMessage = function () {
         var  message = Array.prototype.shift.call(arguments); // arguments的第一个参数为消息名称
@@ -120,5 +226,5 @@
         reciveMessage:reciveMessage
     }
   }
-  )();
+  )(); */
 </script>
